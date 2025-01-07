@@ -2,9 +2,13 @@ from openai import OpenAI
 import requests
 from typing import List
 from secrets import NEWS_API_KEY, OPEN_AI_KEY
+from filtered_fake_news import filter_news_parallel
 
 # Initialize OpenAI client
 client = OpenAI(api_key=OPEN_AI_KEY)
+
+# Should news titles be filtered
+FILTER_NEWS = True
 
 # Step 1: Pull the news from a news API
 def fetch_news(api_key: str, query: str = "top headlines") -> List[str]:
@@ -90,6 +94,11 @@ def main():
     print("Fetching the latest news...")
     news = fetch_news(news_api_key)
     print(f"Fetched news: {news}\n")
+    
+    if FILTER_NEWS is True:
+        print("Filtering the news...")
+        news = filter_news_parallel(news)
+        print(f"Filtered news: {news}\n")
 
     print("Summarizing the news...")
     summary = summarize_news(news)
